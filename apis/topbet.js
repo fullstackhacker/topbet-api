@@ -76,4 +76,8 @@ router.get('/nfl', function(req, res){
   request(CONSTANTS.URLS.NFL_LINES, scraperResponse(res));
 });
 
+router.get('/nba', function(req, res){
+  request(CONSTANTS.URLS.NBA_LINES, scraperResponse(res));
+});
+
 module.exports = router;

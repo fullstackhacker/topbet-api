@@ -72,12 +72,13 @@ const scraperResponse = function(res){
   };
 };
 
-router.get('/nfl', function(req, res){
-  request(CONSTANTS.URLS.NFL_LINES, scraperResponse(res));
-});
+const requestHandler = function(url){
+  return function(req, res){
+    request(url, scraperResponse(res));
+  };
+};
 
-router.get('/nba', function(req, res){
-  request(CONSTANTS.URLS.NBA_LINES, scraperResponse(res));
-});
+router.get('/nfl', requestHandler(CONSTANTS.URLS.NFL_LINES));
+router.get('/nba', requestHandler(CONSTANTS.URLS.NBA_LINES));
 
 module.exports = router;

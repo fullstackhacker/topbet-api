@@ -6,7 +6,7 @@ const cheerio = require('cheerio');
 const _ = require('lodash');
 const CONSTANTS = require('../constants');
 
-const scraper = function(err, body){
+const oddsScraper = function(err, body){
   if (err){
     console.log('error!');
     console.log(err);
@@ -68,7 +68,7 @@ const scraper = function(err, body){
 
 const scraperResponse = function(res){
   return function(err, response, body){
-    return res.json(scraper(err, body));
+    return res.json(oddsScraper(err, body));
   };
 };
 

@@ -43,27 +43,62 @@ const normalizeBetText = function(err, body, scraper){
 };
 
 const oddsScraper_in = function(bets){
-
   bets = _.map(bets, function(betTexts){
     const bet = {};
 
     bet.title = betTexts[0];
 
+    bet.awayTeam = {};
+    bet.awayTeam.spread = {};
+    bet.awayTeam.spread.line = betTexts[10];
+    bet.awayTeam.spread.vig = betTexts[11];
+    bet.awayTeam.moneyLine = betTexts[13];
+
     bet.homeTeam = {};
     bet.homeTeam.spread = {};
-    bet.homeTeam.spread.line = betTexts[10];
-    bet.homeTeam.spread.vig = betTexts[11];
-    bet.homeTeam.moneyLine = betTexts[13];
+    bet.homeTeam.spread.line = betTexts[21];
+    bet.homeTeam.spread.vig = betTexts[22];
+    bet.homeTeam.moneyLine = betTexts[24];
+
+    bet.over = {};
+    bet.over.line = betTexts[16];
+    bet.over.vig = betTexts[17];
+
+    bet.under = {};
+    bet.under.line = betTexts[27];
+    bet.under.vig = betTexts[28];
+
+    return bet;
+  });
+
+  return {
+    bets: bets
+  };
+};
+
+const halfScraper_in = function(bets){
+  bets = _.map(bets, function(betTexts){
+    const bet = {};
+
+    bet.title = betTexts[0];
 
     bet.awayTeam = {};
     bet.awayTeam.spread = {};
-    bet.awayTeam.spread.line = betTexts[21];
-    bet.awayTeam.spread.vig = betTexts[22];
-    bet.awayTeam.moneyLine = betTexts[24];
+    bet.awayTeam.spread.line = betTexts[10];
+    bet.awayTeam.spread.vig = betTexts[11];
 
-    bet.overUnder = {};
-    bet.overUnder.line = betTexts[16];
-    bet.overUnder.vig = betTexts[17];
+    bet.homeTeam = {};
+    bet.homeTeam.spread = {};
+    bet.homeTeam.spread.line = betTexts[19];
+    bet.homeTeam.spread.vig = betTexts[20];
+
+    bet.over = {};
+    bet.over.line = betTexts[14];
+    bet.over.vig = betTexts[15];
+
+    bet.under = {};
+    bet.under.line = betTexts[23];
+    bet.under.vig = betTexts[24];
 
     return bet;
   });
@@ -77,13 +112,17 @@ const oddsScraper = function(err, body){
   return normalizeBetText(err, body, oddsScraper_in);
 };
 
-const scraperResponse = function(res){
+const halfScraper = function(err, body){
+  return normalizeBetText(err, body, halfScraper_in);
+};
+
+const scraperResponse = function(res, scraper){
   return function(err, response, body){
-    return res.json(oddsScraper(err, body));
+    return res.json(scraper(err, body));
   };
 };
 
-const requestHandler = function(url){
+const requestHandler = function(url, scraper){
   return function(req, res){
     const options = {
       url: url,
@@ -91,11 +130,12 @@ const requestHandler = function(url){
         'User-Agent': "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
       }
     };
-    request(options, scraperResponse(res));
+    request(options, scraperResponse(res, scraper));
   };
 };
 
-router.get('/nfl', requestHandler(CONSTANTS.URLS.NFL_LINES));
-router.get('/nba', requestHandler(CONSTANTS.URLS.NBA_LINES));
+router.get('/nfl', requestHandler(CONSTANTS.URLS.NFL_LINES, oddsScraper));
+router.get('/nfl/firsthalf', requestHandler(CONSTANTS.URLS.NFL_1ST_HALF_LINES, halfScraper));
+router.get('/nba', requestHandler(CONSTANTS.URLS.NBA_LINES, oddsScraper));
 
 module.exports = router;

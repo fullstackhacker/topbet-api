@@ -136,6 +136,9 @@ const requestHandler = function(url, scraper){
 
 router.get('/nfl', requestHandler(CONSTANTS.URLS.NFL_LINES, oddsScraper));
 router.get('/nfl/firsthalf', requestHandler(CONSTANTS.URLS.NFL_1ST_HALF_LINES, halfScraper));
+router.get('/nfl/secondhalf', requestHandler(CONSTANTS.URLS.NFL_2ND_HALF_LINES, halfScraper));
 router.get('/nba', requestHandler(CONSTANTS.URLS.NBA_LINES, oddsScraper));
+router.get('/nba/firsthalf', requestHandler(CONSTANTS.URLS.NBA_1ST_HALF_LINES, halfScraper));
+router.get('/nba/secondhalf', requestHandler(CONSTANTS.URLS.NBA_2ND_HALF_LINES, halfScraper));
 
 module.exports = router;

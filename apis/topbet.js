@@ -6,7 +6,7 @@ const cheerio = require('cheerio');
 const _ = require('lodash');
 const CONSTANTS = require('../constants');
 
-const oddsScraper = function(err, body){
+const normalizeBetText = function(err, body, scraper){
   if (err){
     console.log('error!');
     console.log(err);
@@ -29,15 +29,22 @@ const oddsScraper = function(err, body){
     betTextList.push($(this).text());
   });
 
-  const bets = betTextList.map(function(betTexts){
+  let bets = betTextList.map(function(betTexts){
     betTexts = betTexts.split("\n");
 
     betTexts = _.map(betTexts, function(betText){
       return _.trim(betText); 
     });
 
-    _.pull(betTexts, false, "");
+    return _.pull(betTexts, false, "");
+  });
 
+  return scraper(bets);
+};
+
+const oddsScraper_in = function(bets){
+
+  bets = _.map(bets, function(betTexts){
     const bet = {};
 
     bet.title = betTexts[0];
@@ -64,6 +71,10 @@ const oddsScraper = function(err, body){
   return {
     bets: bets
   };
+};
+
+const oddsScraper = function(err, body){
+  return normalizeBetText(err, body, oddsScraper_in);
 };
 
 const scraperResponse = function(res){

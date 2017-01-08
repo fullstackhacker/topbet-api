@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": ". ../../scripts/dev_env.sh && nodemon server.js",
-    "start": ". ../../scripts/prod_env && node server.js",
-    "shell": ". ../../scripts/dev_env.sh && node"
+    "start": ". ../../scripts/prod_env.sh && node server.js",
+    "shell": ". ../../scripts/dev_env.sh && node",
+    "deploy": "ssh mush < deploy.sh"
   },
   "dependencies": {
     "body-parser": "~1.8.1",

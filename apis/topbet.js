@@ -46,7 +46,14 @@ const oddsScraper_in = function(bets){
   bets = _.map(bets, function(betTexts){
     const bet = {};
 
+    bet.parlayable = true;
+
     bet.title = betTexts[0];
+    if (bet.title == "O"){  // "O" signifies that no parley is allowed on the bet
+      bet.title = betTexts[1];
+      bet.parlayable = false;
+      betTexts.shift();  // remove the first element (the "O")
+    }
 
     bet.awayTeam = {};
     bet.awayTeam.spread = {};

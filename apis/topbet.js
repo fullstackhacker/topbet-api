@@ -55,13 +55,24 @@ const oddsScraper_in = function(bets){
       betTexts.shift();  // remove the first element (the "O")
     }
 
+    const teamNames = bet.title.split(' at ', 2);
+    const awayTeamName = teamNames[0];
+
+    // remove the date
+    let homeTeamName = teamNames[1].split(" ");
+    homeTeamName.pop();
+    homeTeamName = homeTeamName.join(" ");
+
     bet.awayTeam = {};
+    bet.awayTeam.name = awayTeamName;
     bet.awayTeam.spread = {};
     bet.awayTeam.spread.line = betTexts[10];
     bet.awayTeam.spread.vig = betTexts[11];
     bet.awayTeam.moneyLine = betTexts[13];
 
+
     bet.homeTeam = {};
+    bet.homeTeam.name = homeTeamName;
     bet.homeTeam.spread = {};
     bet.homeTeam.spread.line = betTexts[21];
     bet.homeTeam.spread.vig = betTexts[22];
@@ -88,13 +99,30 @@ const halfScraper_in = function(bets){
     const bet = {};
 
     bet.title = betTexts[0];
+    if (bet.title == "O"){  // "O" signifies that no parley is allowed on the bet
+      bet.title = betTexts[1];
+      bet.parlayable = false;
+      betTexts.shift();  // remove the first element (the "O")
+    }
+
+    const teamNames = bet.title.split(' at ', 2);
+    const awayTeamName = teamNames[0];
+
+    // remove the date and half tag
+    let homeTeamName = teamNames[1].split(" ");
+    homeTeamName.pop();
+    homeTeamName.pop();
+    homeTeamName.pop();
+    homeTeamName = homeTeamName.join(" ");
 
     bet.awayTeam = {};
+    bet.awayTeam.name = awayTeamName
     bet.awayTeam.spread = {};
     bet.awayTeam.spread.line = betTexts[10];
     bet.awayTeam.spread.vig = betTexts[11];
 
     bet.homeTeam = {};
+    bet.homeTeam.name = homeTeamName;
     bet.homeTeam.spread = {};
     bet.homeTeam.spread.line = betTexts[19];
     bet.homeTeam.spread.vig = betTexts[20];
